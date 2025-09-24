@@ -22,6 +22,7 @@ public class UserController
             newUser.CreatedAt = DateTime.Now;
 
             // Añadir el nuevo usuario y guardar cambios
+            
             db.users.Add(newUser);
             db.SaveChanges();
 
