@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Sprint2.Models;
 
+
 namespace Sprint2.Data;
 
 public class MysqlDbContext : DbContext
