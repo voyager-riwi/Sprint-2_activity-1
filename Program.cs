@@ -1,4 +1,6 @@
 ﻿using Sprint2.Controllers;
+using Sprint2.Models; // <--- ESTA LÍNEA FALTABA
+
 public class Program
 {
     public static void Main(string[] args)
@@ -20,6 +22,30 @@ public class Program
             switch (opcion)
             {
                 case "1":
+                    Console.WriteLine("\n--- Registrar un nuevo usuario ---");
+                    var newUser = new User();
+
+                    Console.Write("Nombre: ");
+                    newUser.FirstName = Console.ReadLine();
+
+                    Console.Write("Apellido: ");
+                    newUser.LastName = Console.ReadLine();
+
+                    Console.Write("Nombre de usuario: ");
+                    newUser.Username = Console.ReadLine();
+
+                    Console.Write("Correo electrónico: ");
+                    newUser.Email = Console.ReadLine();
+
+                    Console.Write("Contraseña: ");
+                    newUser.Password = Console.ReadLine();
+                    
+                    // Aquí puedes agregar la solicitud de los demás campos opcionales si lo deseas
+                    // newUser.Phone = ...
+                    // newUser.City = ...
+
+                    var message = userController.Create(newUser);
+                    Console.WriteLine(message);
                     break;
                 case "2":
                     Consultations();
