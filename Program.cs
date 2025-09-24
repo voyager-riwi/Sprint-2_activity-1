@@ -1,4 +1,6 @@
 ﻿using Sprint2.Controllers;
+using Sprint2.Models; // <--- ESTA LÍNEA FALTABA
+
 public class Program
 {
     public static void Main(string[] args)
@@ -20,6 +22,30 @@ public class Program
             switch (opcion)
             {
                 case "1":
+                    Console.WriteLine("\n--- Registrar un nuevo usuario ---");
+                    var newUser = new User();
+
+                    Console.Write("Nombre: ");
+                    newUser.FirstName = Console.ReadLine();
+
+                    Console.Write("Apellido: ");
+                    newUser.LastName = Console.ReadLine();
+
+                    Console.Write("Nombre de usuario: ");
+                    newUser.Username = Console.ReadLine();
+
+                    Console.Write("Correo electrónico: ");
+                    newUser.Email = Console.ReadLine();
+
+                    Console.Write("Contraseña: ");
+                    newUser.Password = Console.ReadLine();
+                    
+                    // Aquí puedes agregar la solicitud de los demás campos opcionales si lo deseas
+                    // newUser.Phone = ...
+                    // newUser.City = ...
+
+                    var message = userController.Create(newUser);
+                    Console.WriteLine(message);
                     break;
                 case "2":
                     Consultations();
@@ -27,33 +53,73 @@ public class Program
                 case "3": 
                     break;
                 case "4":
-                    Console.WriteLine("\n--- Eliminar usuario ---");
-                    Console.Write("Ingrese el ID del usuario a eliminar: ");
-                    if (int.TryParse(Console.ReadLine(), out int id))
+                     Console.WriteLine("\n--- Eliminar un usuario ---");
+                    Console.WriteLine("1. Eliminar por ID");
+                    Console.WriteLine("2. Eliminar por correo electrónico");
+                    Console.Write("Seleccione una opción de eliminación: ");
+                    string deleteOption = Console.ReadLine();
+
+                    if (deleteOption == "1")
                     {
-                        Console.Write("¿Está seguro de eliminar este usuario? (S/N): ");
-                        var confirmation = Console.ReadLine();
-                        if (confirmation?.ToUpper() == "S")
+                        Console.Write("Ingrese el ID del usuario a eliminar: ");
+                        if (int.TryParse(Console.ReadLine(), out int id))
                         {
-                            if (userController.DeleteUser(id))
+                            Console.Write("¿Está seguro de eliminar este usuario? (S/N): ");
+                            var confirmation = Console.ReadLine();
+                            if (confirmation?.ToUpper() == "S")
                             {
-                                Console.WriteLine("Usuario eliminado correctamente.");
+                                if (userController.DeleteUser(id))
+                                {
+                                    Console.WriteLine("Usuario eliminado correctamente.");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Usuario no encontrado o error al eliminar.");
+                                }
                             }
                             else
                             {
-                                Console.WriteLine("Usuario no encontrado o error al eliminar.");
+                                Console.WriteLine("Operación de eliminación cancelada.");
                             }
                         }
                         else
                         {
-                            Console.WriteLine("Operación de eliminación cancelada.");
+                            Console.WriteLine("ID inválido.");
+                        }
+                    }
+                    else if (deleteOption == "2")
+                    {
+                        Console.Write("Ingrese el correo electrónico del usuario a eliminar: ");
+                        string email = Console.ReadLine();
+                        if (!string.IsNullOrEmpty(email))
+                        {
+                            Console.Write("¿Está seguro de eliminar este usuario? (S/N): ");
+                            var confirmation = Console.ReadLine();
+                            if (confirmation?.ToUpper() == "S")
+                            {
+                                if (userController.DeleteUserByEmail(email))
+                                {
+                                    Console.WriteLine("Usuario eliminado correctamente.");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Usuario no encontrado o error al eliminar.");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Operación de eliminación cancelada.");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Correo electrónico inválido.");
                         }
                     }
                     else
                     {
-                        Console.WriteLine("ID inválido.");
+                        Console.WriteLine("Opción no válida.");
                     }
-                                            
                     break;
                 case "5":
                     return;
