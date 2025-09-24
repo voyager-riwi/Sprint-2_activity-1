@@ -22,6 +22,7 @@ public class UserController
             newUser.CreatedAt = DateTime.Now;
 
             // Añadir el nuevo usuario y guardar cambios
+            
             db.users.Add(newUser);
             db.SaveChanges();
 
@@ -30,7 +31,7 @@ public class UserController
     }
 
     // Update 
-    
+
     // 🔹 READ (todos)
     public List<User> Index()
     {
@@ -39,9 +40,10 @@ public class UserController
             return db.users.ToList();
         }
     }
-    
-    
+
+
     // Delete 
+    // Delete por Id
     public bool DeleteUser(int id)
     {
         using (var db = new MysqlDbContext())
@@ -49,15 +51,29 @@ public class UserController
             var userToDelete = db.users.Find(id);
             if (userToDelete == null)
             {
-                return false; 
+                return false;
             }
 
             db.users.Remove(userToDelete);
             db.SaveChanges();
-            return true; 
+            return true;
+        }
+    }
+
+    // Delete por Email
+    public bool DeleteUserByEmail(string email)
+    {
+        using (var db = new MysqlDbContext())
+        {
+            var userToDelete = db.users.FirstOrDefault(u => u.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+            if (userToDelete == null)
+            {
+                return false;
+            }
+
+            db.users.Remove(userToDelete);
+            db.SaveChanges();
+            return true;
         }
     }
 }
-
-
-
