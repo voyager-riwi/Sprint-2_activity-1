@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Sprint2
-build_property.ProjectDir = /home/rwadmin/Documentos/sprint2-activity1/sprint2-activity1/
+build_property.ProjectDir = /home/csharp/Documentos/Sprint-2_activity-1/
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
