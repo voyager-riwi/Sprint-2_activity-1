@@ -182,7 +182,7 @@ public class Program
             switch (subOpcion)
             {
                 case "1":
-                    Console.WriteLine("\n--- Listado de todos los usuarios ---");
+                    Console.WriteLine("--- Listado de todos los usuarios ---");
                     var allUsers = userController.GetAllUsers();
                     foreach (var user in allUsers)
                     {
@@ -191,7 +191,7 @@ public class Program
                     break;
 
                 case "2":
-                    Console.WriteLine("\n--- Ver el detalle de un usuario por su Id ---");
+                    Console.WriteLine("--- Ver el detalle de un usuario por su Id ---");
                     Console.Write("Ingrese el ID del usuario: ");
                     if (int.TryParse(Console.ReadLine(), out int id))
                     {
@@ -212,7 +212,7 @@ public class Program
                     break;
 
                 case "3":
-                    Console.WriteLine("\n--- Ver el detalle de un usuario por su correo electrónico ---");
+                    Console.WriteLine("--- Ver el detalle de un usuario por su correo electrónico ---");
                     Console.Write("Ingrese el correo electrónico del usuario: ");
                     var email = Console.ReadLine();
                     var userByEmail = userController.GetUserByEmail(email);
@@ -227,7 +227,7 @@ public class Program
                     break;
 
                 case "4":
-                    Console.WriteLine("\n--- Listar usuarios de una ciudad específica ---");
+                    Console.WriteLine("--- Listar usuarios de una ciudad específica ---");
                     Console.Write("Ingrese el nombre de la ciudad: ");
                     var city = Console.ReadLine();
                     var usersByCity = userController.GetUsersByCity(city);
@@ -245,7 +245,7 @@ public class Program
                     break;
 
                 case "5":
-                    Console.WriteLine("\n--- Listar usuarios de un país específico ---");
+                    Console.WriteLine("--- Listar usuarios de un país específico ---");
                     Console.Write("Ingrese el nombre del país: ");
                     var country = Console.ReadLine();
                     var usersByCountry = userController.GetUsersByCountry(country);
@@ -263,7 +263,7 @@ public class Program
                     break;
 
                 case "6":
-                    Console.WriteLine("\n--- Listar usuarios mayores de una edad específica ---");
+                    Console.WriteLine("--- Listar usuarios mayores de una edad específica ---");
                     Console.Write("Ingrese la edad mínima: ");
                     if (int.TryParse(Console.ReadLine(), out int minAge))
                     {
@@ -287,7 +287,7 @@ public class Program
                     break;
 
                 case "7":
-                    Console.WriteLine("\n--- Listar usuarios de un género específico ---");
+                    Console.WriteLine("--- Listar usuarios de un género específico ---");
                     Console.Write("Ingrese el género (M/F/Otro): ");
                     var gender = Console.ReadLine();
                     var usersByGender = userController.GetUsersByGender(gender);
@@ -305,7 +305,7 @@ public class Program
                     break;
 
                 case "8":
-                    Console.WriteLine("\n--- Mostrar solo nombres completos y correos ---");
+                    Console.WriteLine("--- Mostrar solo nombres completos y correos ---");
                     var namesAndEmails = userController.GetNamesAndEmails();
                     foreach (dynamic item in namesAndEmails)
                     {
@@ -314,13 +314,13 @@ public class Program
                     break;
 
                 case "9":
-                    Console.WriteLine("\n--- Contar el total de usuarios registrados ---");
+                    Console.WriteLine("--- Contar el total de usuarios registrados ---");
                     var totalUsers = userController.CountTotalUsers();
                     Console.WriteLine($"Total de usuarios registrados: {totalUsers}");
                     break;
 
                 case "10":
-                    Console.WriteLine("\n--- Contar cuántos usuarios hay en cada ciudad ---");
+                    Console.WriteLine("--- Contar cuántos usuarios hay en cada ciudad ---");
                     var usersByCityCount = userController.CountUsersByCity();
                     foreach (var item in usersByCityCount)
                     {
@@ -329,7 +329,7 @@ public class Program
                     break;
 
                 case "11":
-                    Console.WriteLine("\n--- Contar cuántos usuarios hay en cada país ---");
+                    Console.WriteLine("--- Contar cuántos usuarios hay en cada país ---");
                     var usersByCountryCount = userController.CountUsersByCountry();
                     foreach (var item in usersByCountryCount)
                     {
@@ -338,7 +338,7 @@ public class Program
                     break;
 
                 case "12":
-                    Console.WriteLine("\n--- Ver cuáles usuarios no tienen teléfono registrado ---");
+                    Console.WriteLine("--- Ver cuáles usuarios no tienen teléfono registrado ---");
                     var usersWithoutPhone = userController.GetUsersWithoutPhone();
                     if (usersWithoutPhone.Any())
                     {
@@ -354,7 +354,7 @@ public class Program
                     break;
 
                 case "13":
-                    Console.WriteLine("\n--- Ver cuáles usuarios no tienen dirección registrada ---");
+                    Console.WriteLine("--- Ver cuáles usuarios no tienen dirección registrada ---");
                     var usersWithoutAddress = userController.GetUsersWithoutAddress();
                     if (usersWithoutAddress.Any())
                     {
@@ -370,7 +370,7 @@ public class Program
                     break;
 
                 case "14":
-                    Console.WriteLine("\n--- Listar los últimos usuarios registrados ---");
+                    Console.WriteLine("--- Listar los últimos usuarios registrados ---");
                     Console.Write("Ingrese la cantidad de usuarios a mostrar: ");
                     if (int.TryParse(Console.ReadLine(), out int count))
                     {
@@ -395,7 +395,7 @@ public class Program
                     break;
 
                 case "15":
-                    Console.WriteLine("\n--- Listar usuarios ordenados por apellido ---");
+                    Console.WriteLine("--- Listar usuarios ordenados por apellido ---");
                     var usersOrdered = userController.GetUsersOrderedByLastName();
                     foreach (var user in usersOrdered)
                     {
@@ -410,7 +410,7 @@ public class Program
                     Console.WriteLine("Opción no válida. Inténtelo de nuevo.");
                     break;
             }
-            Console.WriteLine("\nPresiona cualquier tecla para continuar...");
+            Console.WriteLine("Presiona cualquier tecla para continuar...");
             Console.ReadKey();
             Console.Clear();
         } while (subOpcion != "x");
