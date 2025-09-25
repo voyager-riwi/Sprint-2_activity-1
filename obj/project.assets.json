@@ -742,19 +742,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Jerónimo\\.nuget\\packages\\": {}
+    "/home/csharp/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Jerónimo\\OneDrive\\Desktop\\RIWI\\C#\\Sprint-2_activity-1\\Sprint2.csproj",
+      "projectUniqueName": "/home/csharp/Documentos/Sprint-2_activity-1/Sprint2.csproj",
       "projectName": "Sprint2",
-      "projectPath": "C:\\Users\\Jerónimo\\OneDrive\\Desktop\\RIWI\\C#\\Sprint-2_activity-1\\Sprint2.csproj",
-      "packagesPath": "C:\\Users\\Jerónimo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Jerónimo\\OneDrive\\Desktop\\RIWI\\C#\\Sprint-2_activity-1\\obj\\",
+      "projectPath": "/home/csharp/Documentos/Sprint-2_activity-1/Sprint2.csproj",
+      "packagesPath": "/home/csharp/.nuget/packages/",
+      "outputPath": "/home/csharp/Documentos/Sprint-2_activity-1/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Jerónimo\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/home/csharp/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -772,13 +772,7 @@
         "warnAsError": [
           "NU1605"
         ]
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "true",
-        "auditLevel": "low",
-        "auditMode": "direct"
-      },
-      "SdkAnalysisLevel": "9.0.300"
+      }
     },
     "frameworks": {
       "net8.0": {
@@ -804,30 +798,12 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[8.0.20, 8.0.20]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Host.win-x64",
-            "version": "[8.0.20, 8.0.20]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Ref",
-            "version": "[8.0.20, 8.0.20]"
-          },
-          {
-            "name": "Microsoft.WindowsDesktop.App.Ref",
-            "version": "[8.0.20, 8.0.20]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.119/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
