@@ -155,7 +155,7 @@ public class UserController
     {
         using (var db = new MysqlDbContext())
         {
-            var userToDelete = db.users.FirstOrDefault(u => u.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+            var userToDelete = db.users.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
             if (userToDelete == null)
             {
                 return false;
