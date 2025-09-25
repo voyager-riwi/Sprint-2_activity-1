@@ -28,3 +28,10 @@ public class User
     [Column("updated_at")]
     public DateTime? UpdatedAt { get; set; }
 }
+
+public class UserNameAndEmailDto
+{
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string Email { get; set; }
+}
