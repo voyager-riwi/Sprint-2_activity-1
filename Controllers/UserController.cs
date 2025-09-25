@@ -1,6 +1,5 @@
 using Sprint2.Data;
 using Sprint2.Models;
-using System.Linq;
 
 namespace Sprint2.Controllers;
 
@@ -32,50 +31,49 @@ public class UserController
     }
 
     // READ / CONSULTAS
-
-    // 1. Listar todos los usuarios
+    // 1 - Listar todos los usuarios
     public List<User> GetAllUsers()
     {
         return _context.users.ToList();
     }
 
-    // 2. Ver detalle por Id
+    // 2 - Ver detalle por Id
     public User GetUserById(int id)
     {
         return _context.users.Find(id);
     }
     
-    // 3. Ver detalle por correo
+    // 3 - Ver detalle por correo
     public User GetUserByEmail(string email)
     {
         return _context.users.FirstOrDefault(u => u.Email == email);
     }
 
-    // 4. Listar por ciudad
+    // 4 - Listar por ciudad
     public List<User> GetUsersByCity(string city)
     {
         return _context.users.Where(u => u.City == city).ToList();
     }
 
-    // 5. Listar por país
+    // 5 - Listar por país
     public List<User> GetUsersByCountry(string country)
     {
         return _context.users.Where(u => u.Country == country).ToList();
     }
     
-    // 6. Listar por edad
+    // 6 - Listar por edad
     public List<User> GetUsersOlderThan(int minAge)
     {
         return _context.users.Where(u => u.Age > minAge).ToList();
     }
 
-    // 7. Listar por género
+    // 7 - Listar por género
     public List<User> GetUsersByGender(string gender)
     {
         return _context.users.Where(u => u.Gender == gender).ToList();
     }
 
-    // 8. Seleccionar campos específicos (nombres y correos)
+    // 8 - Seleccionar campos específicos (nombres y correos)
     public List<UserNameAndEmailDto> GetNamesAndEmails()
     {
         return _context.users
@@ -88,39 +86,39 @@ public class UserController
                        .ToList();
     }
 
-    // 9. Contar el total de usuarios
+    // 9 - Contar el total de usuarios
     public int CountTotalUsers()
     {
         return _context.users.Count();
     }
 
-    // 10. Contar usuarios por ciudad
+    // 10 - Contar usuarios por ciudad
     public Dictionary<string, int> CountUsersByCity()
     {
         return _context.users.GroupBy(u => u.City)
                              .ToDictionary(g => g.Key, g => g.Count());
     }
 
-    // 11. Contar usuarios por país
+    // 11 - Contar usuarios por país
     public Dictionary<string, int> CountUsersByCountry()
     {
         return _context.users.GroupBy(u => u.Country)
                              .ToDictionary(g => g.Key, g => g.Count());
     }
 
-    // 12. Usuarios sin teléfono
+    // 12 - Usuarios sin teléfono
     public List<User> GetUsersWithoutPhone()
     {
         return _context.users.Where(u => string.IsNullOrEmpty(u.Phone)).ToList();
     }
 
-    // 13. Usuarios sin dirección
+    // 13 - Usuarios sin dirección
     public List<User> GetUsersWithoutAddress()
     {
         return _context.users.Where(u => string.IsNullOrEmpty(u.City) || string.IsNullOrEmpty(u.Country)).ToList();
     }
 
-    // 14. Últimos usuarios registrados
+    // 14 - Últimos usuarios registrados
     public List<User> GetLastRegisteredUsers(int count)
     {
         return _context.users.OrderByDescending(u => u.CreatedAt)
@@ -128,7 +126,7 @@ public class UserController
                              .ToList();
     }
 
-    // 15. Ordenar por apellido
+    // 15 - Ordenar por apellido
     public List<User> GetUsersOrderedByLastName()
     {
         return _context.users.OrderBy(u => u.LastName).ToList();
