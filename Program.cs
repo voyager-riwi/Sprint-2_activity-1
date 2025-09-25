@@ -7,6 +7,7 @@ public class Program
     {
         var userController = new UserController();
         string opcion;
+        var user = new User();
 
         while (true)
         {
@@ -39,19 +40,112 @@ public class Program
 
                     Console.Write("Contraseña: ");
                     newUser.Password = Console.ReadLine();
-                    
-                    // Aquí puedes agregar la solicitud de los demás campos opcionales si lo deseas
-                    // newUser.Phone = ...
-                    // newUser.City = ...
 
                     var message = userController.Create(newUser);
                     Console.WriteLine(message);
                     break;
                 case "2":
                     Consultations();
+                    break; 
+                
+                case "3":
+                    Console.WriteLine("--- Módulo de Actualización de Datos ---");
+
+                    Console.Write("Ingrese el ID del usuario que desea actualizar: ");
+                    int userId;
+                    if (!int.TryParse(Console.ReadLine(), out userId))
+                    {
+                        Console.WriteLine(" El ID debe ser un número.");
+                        break;
+                    }
+
+                    var controller = new UserController();
+                    var userToEdit = controller.GetUserForEditing(userId); 
+
+                    if (userToEdit == null) 
+                    {
+                        Console.WriteLine("✘ Usuario no encontrado.");
+                        break;
+                    }
+
+                    Console.WriteLine($"1. Nombre actual: {userToEdit.Username}");
+                    Console.WriteLine($"2. Correo actual: {userToEdit.Email}");
+                    Console.WriteLine($"3. Teléfono actual: {userToEdit.Phone}");
+                    Console.WriteLine("4. Contraseña (oculta)");
+
+                    Console.WriteLine("¿Qué campo desea actualizar?");
+                    Console.WriteLine("  1. Nombre de usuario");
+                    Console.WriteLine("  2. Correo electrónico");
+                    Console.WriteLine("  3. Teléfono");
+                    Console.WriteLine("  4. Contraseña");
+                    Console.Write("Seleccione una opción: ");
+
+                    string option = Console.ReadLine();
+                    bool needsUpdate = true;
+
+                    switch (option)
+                    {
+                        case "1":
+                            Console.Write("Ingrese el nuevo nombre: ");
+                            userToEdit.Username = Console.ReadLine();
+                            break;
+
+                        case "2":
+                            Console.Write("Ingrese el nuevo correo: ");
+                            userToEdit.Email = Console.ReadLine();
+                            break;
+
+                        case "3":
+                            Console.Write("Ingrese el nuevo teléfono: ");
+                            userToEdit.Phone = Console.ReadLine();
+                            break;
+
+                        case "4":
+                            Console.Write("Ingrese la nueva contraseña: ");
+                            string newPassword = Console.ReadLine();
+                            Console.Write("Confirme la nueva contraseña: ");
+                            string confirmPassword = Console.ReadLine();
+
+                            if (newPassword == confirmPassword)
+                            {
+                                userToEdit.Password = newPassword;
+                                Console.WriteLine("✔ Contraseña actualizada correctamente.");
+                            }
+                            else
+                            {
+                                Console.WriteLine("✘ Error: Las contraseñas no coinciden.");
+                                needsUpdate = false;
+                            }
+                            break;
+
+                        default:
+                            Console.WriteLine("✘ Opción no válida. No se realizará ninguna actualización.");
+                            needsUpdate = false;
+                            break;
+                    }
+
+                    if (needsUpdate)
+                    { 
+                        bool updateSuccess = controller.UpdateUser(userToEdit.Id, userToEdit);
+
+                        if (updateSuccess)
+                        {
+                            Console.WriteLine(" ¡Cambios guardados exitosamente en la base de datos!");
+                           
+                            Console.WriteLine("Información actualizada:");
+                            Console.WriteLine($"1. Nombre: {userToEdit.Username}");
+                            Console.WriteLine($"2. Correo: {userToEdit.Email}");
+                            Console.WriteLine($"3. Teléfono: {userToEdit.Phone}"); 
+                            Console.WriteLine("4. Contraseña: (oculta)");
+                        }
+                        else
+                        {
+                            Console.WriteLine(" Ocurrió un error. Los datos no pudieron ser guardados.");
+                        }
+                    }
                     break;
-                case "3": 
-                    break;
+
+
                 case "4":
                         Console.WriteLine("\n--- Eliminar un usuario ---");
                     Console.WriteLine("1. Eliminar por ID");
