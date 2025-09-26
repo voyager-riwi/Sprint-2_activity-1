@@ -1,5 +1,7 @@
 using Sprint2.Data;
 using Sprint2.Models;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Sprint2.Controllers;
 
@@ -28,6 +30,65 @@ public class UserController
         _context.SaveChanges();
 
         return "¡Usuario creado correctamente!";
+    }
+    
+    // Update
+    public User GetUserForEditing(int userId)
+    {
+        using (var db = new MysqlDbContext())
+        {
+            return db.users.FirstOrDefault(u => u.Id == userId);
+        }
+    }
+    public bool UpdateUser(int userId, User userDataToUpdate)
+    {
+        using (var db = new MysqlDbContext())
+        {
+            
+            var user = db.users.FirstOrDefault(u => u.Id == userId);
+
+            
+            if (user == null)
+            {
+                return false; 
+            }
+            
+            user.Username = userDataToUpdate.Username;
+            user.Email = userDataToUpdate.Email;
+            user.Phone = userDataToUpdate.Phone;
+            user.Password = userDataToUpdate.Password;
+
+            try
+            {
+                
+                db.SaveChanges();
+                Console.WriteLine(" Usuario actualizado exitosamente.");
+                return true; 
+            }
+            catch (Exception ex)
+            {
+               
+                Console.WriteLine($" Error al actualizar el usuario: {ex.Message}");
+                return false;
+
+                void PrintUser(User user)
+                {
+                    if (user == null) 
+                    {
+                        Console.WriteLine("No se puede mostrar información de un usuario nulo.");
+                        return;
+                    }
+
+                    Console.WriteLine("────────── INFO DEL USUARIO ──────────");
+                    Console.WriteLine($"ID:        {user.Id}");
+                    Console.WriteLine($"Nombre:    {user.Username}");
+                    Console.WriteLine($"Correo:    {user.Email}");
+                    Console.WriteLine($"Teléfono:  {user.Phone}");
+                    Console.WriteLine("Contraseña: (oculta)");
+                    Console.WriteLine("─────────────────────────────────────");
+                }
+            }
+        }
     }
 
     // READ / CONSULTAS
