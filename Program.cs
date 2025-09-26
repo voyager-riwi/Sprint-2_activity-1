@@ -1,13 +1,13 @@
 ﻿using Sprint2.Controllers;
-using Sprint2.Models; // <--- ESTA LÍNEA FALTABA
+using Sprint2.Models;
 
 public class Program
 {
+    // El método Main es el punto de entrada principal del programa.
     public static void Main(string[] args)
     {
         var userController = new UserController();
         string opcion;
-        var user = new User();
 
         while (true)
         {
@@ -23,7 +23,7 @@ public class Program
             switch (opcion)
             {
                 case "1":
-                    Console.WriteLine("\n--- Registrar un nuevo usuario ---");
+                    Console.WriteLine("--- Registrar un nuevo usuario ---");
                     var newUser = new User();
 
                     Console.Write("Nombre: ");
@@ -41,65 +41,93 @@ public class Program
                     Console.Write("Contraseña: ");
                     newUser.Password = Console.ReadLine();
 
-                    var message = userController.Create(newUser);
-                    Console.WriteLine(message);
+                    var createdUser = userController.Create(newUser);
+
+                    if (createdUser != null)
+                    {
+                        Console.WriteLine($"¡Usuario guardado correctamente! ID: {createdUser.Id}, Nombre: {createdUser.FirstName}");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error: El nombre de usuario o el correo electrónico ya existen.");
+                    }
                     break;
+
                 case "2":
+                    // Llamamos al metodo de consultas
                     Consultations();
-                    break; 
-                
+                    break;
+
                 case "3":
                     Console.WriteLine("--- Módulo de Actualización de Datos ---");
+                    User userToEdit = null;
 
-                    Console.Write("Ingrese el ID del usuario que desea actualizar: ");
-                    int userId;
-                    if (!int.TryParse(Console.ReadLine(), out userId))
+                    Console.WriteLine("¿Cómo desea buscar al usuario a editar?");
+                    Console.WriteLine("  1. Por ID");
+                    Console.WriteLine("  2. Por Correo Electrónico");
+                    Console.Write("Seleccione una opción: ");
+                    string searchOption = Console.ReadLine();
+
+                    if (searchOption == "1")
                     {
-                        Console.WriteLine(" El ID debe ser un número.");
-                        break;
+                        Console.Write("Ingrese el ID del usuario que desea actualizar: ");
+                        if (int.TryParse(Console.ReadLine(), out int userId))
+                        {
+                            userToEdit = userController.GetUserById(userId);
+                        }
+                        else
+                        {
+                            Console.WriteLine(" El ID debe ser un número.");
+                        }
+                    }
+                    else if (searchOption == "2")
+                    {
+                        Console.Write("Ingrese el correo electrónico del usuario a buscar: ");
+                        string email = Console.ReadLine();
+                        if (!string.IsNullOrEmpty(email))
+                        {
+                            userToEdit = userController.GetUserByEmail(email);
+                        }
+                        else
+                        {
+                            Console.WriteLine(" El correo no puede estar vacío.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("✘ Opción de búsqueda no válida.");
                     }
 
-                    var controller = new UserController();
-                    var userToEdit = controller.GetUserForEditing(userId); 
-
-                    if (userToEdit == null) 
+                    if (userToEdit == null)
                     {
                         Console.WriteLine("✘ Usuario no encontrado.");
                         break;
                     }
 
-                    Console.WriteLine($"1. Nombre actual: {userToEdit.Username}");
+                    Console.WriteLine("--- Usuario encontrado. ¿Qué campo desea actualizar? ---");
+                    Console.WriteLine($"1. Nombre de usuario actual: {userToEdit.Username}");
                     Console.WriteLine($"2. Correo actual: {userToEdit.Email}");
                     Console.WriteLine($"3. Teléfono actual: {userToEdit.Phone}");
                     Console.WriteLine("4. Contraseña (oculta)");
-
-                    Console.WriteLine("¿Qué campo desea actualizar?");
-                    Console.WriteLine("  1. Nombre de usuario");
-                    Console.WriteLine("  2. Correo electrónico");
-                    Console.WriteLine("  3. Teléfono");
-                    Console.WriteLine("  4. Contraseña");
                     Console.Write("Seleccione una opción: ");
 
-                    string option = Console.ReadLine();
+                    string fieldToUpdate = Console.ReadLine();
                     bool needsUpdate = true;
 
-                    switch (option)
+                    switch (fieldToUpdate)
                     {
                         case "1":
-                            Console.Write("Ingrese el nuevo nombre: ");
+                            Console.Write("Ingrese el nuevo nombre de usuario: ");
                             userToEdit.Username = Console.ReadLine();
                             break;
-
                         case "2":
                             Console.Write("Ingrese el nuevo correo: ");
                             userToEdit.Email = Console.ReadLine();
                             break;
-
                         case "3":
                             Console.Write("Ingrese el nuevo teléfono: ");
                             userToEdit.Phone = Console.ReadLine();
                             break;
-
                         case "4":
                             Console.Write("Ingrese la nueva contraseña: ");
                             string newPassword = Console.ReadLine();
@@ -109,7 +137,6 @@ public class Program
                             if (newPassword == confirmPassword)
                             {
                                 userToEdit.Password = newPassword;
-                                Console.WriteLine("✔ Contraseña actualizada correctamente.");
                             }
                             else
                             {
@@ -117,37 +144,34 @@ public class Program
                                 needsUpdate = false;
                             }
                             break;
-
                         default:
-                            Console.WriteLine("✘ Opción no válida. No se realizará ninguna actualización.");
+                            Console.WriteLine("✘ Opción no válida.");
                             needsUpdate = false;
                             break;
                     }
 
                     if (needsUpdate)
-                    { 
-                        bool updateSuccess = controller.UpdateUser(userToEdit.Id, userToEdit);
+                    {
+                        bool updateSuccess = userController.UpdateUser(userToEdit.Id, userToEdit);
 
                         if (updateSuccess)
                         {
-                            Console.WriteLine(" ¡Cambios guardados exitosamente en la base de datos!");
-                           
-                            Console.WriteLine("Información actualizada:");
-                            Console.WriteLine($"1. Nombre: {userToEdit.Username}");
+                            Console.WriteLine("¡Cambios guardados exitosamente!");
+                            Console.WriteLine("--- Información actualizada ---");
+                            Console.WriteLine($"1. Nombre de usuario: {userToEdit.Username}");
                             Console.WriteLine($"2. Correo: {userToEdit.Email}");
-                            Console.WriteLine($"3. Teléfono: {userToEdit.Phone}"); 
+                            Console.WriteLine($"3. Teléfono: {userToEdit.Phone}");
                             Console.WriteLine("4. Contraseña: (oculta)");
                         }
                         else
                         {
-                            Console.WriteLine(" Ocurrió un error. Los datos no pudieron ser guardados.");
+                            Console.WriteLine("✘ Ocurrió un error al guardar los datos.");
                         }
                     }
                     break;
 
-
                 case "4":
-                        Console.WriteLine("\n--- Eliminar un usuario ---");
+                    Console.WriteLine("\n--- Eliminar un usuario ---");
                     Console.WriteLine("1. Eliminar por ID");
                     Console.WriteLine("2. Eliminar por correo electrónico");
                     Console.Write("Seleccione una opción de eliminación: ");
@@ -233,19 +257,23 @@ public class Program
                         Console.WriteLine("Opción no válida.");
                     }
                     break;
+
                 case "5":
                     return;
+
                 default:
                     Console.WriteLine("Opción no válida. Inténtelo de nuevo.");
                     break;
             }
+
             Console.WriteLine("\nPresiona cualquier tecla para continuar...");
             Console.ReadKey();
             Console.Clear();
         }
     }
-    
-  public static void Consultations()
+
+    // El método Consultations debe estar aquí, fuera de Main.
+    public static void Consultations()
     {
         var userController = new UserController();
         string subOpcion;
@@ -276,7 +304,7 @@ public class Program
             switch (subOpcion)
             {
                 case "1":
-                    Console.WriteLine("\n--- Listado de todos los usuarios ---");
+                    Console.WriteLine("--- Listado de todos los usuarios ---");
                     var allUsers = userController.GetAllUsers();
                     foreach (var user in allUsers)
                     {
@@ -285,7 +313,7 @@ public class Program
                     break;
 
                 case "2":
-                    Console.WriteLine("\n--- Ver el detalle de un usuario por su Id ---");
+                    Console.WriteLine("--- Ver el detalle de un usuario por su Id ---");
                     Console.Write("Ingrese el ID del usuario: ");
                     if (int.TryParse(Console.ReadLine(), out int id))
                     {
@@ -306,7 +334,7 @@ public class Program
                     break;
 
                 case "3":
-                    Console.WriteLine("\n--- Ver el detalle de un usuario por su correo electrónico ---");
+                    Console.WriteLine("--- Ver el detalle de un usuario por medio de su correo electrónico ---");
                     Console.Write("Ingrese el correo electrónico del usuario: ");
                     var email = Console.ReadLine();
                     var userByEmail = userController.GetUserByEmail(email);
@@ -321,7 +349,7 @@ public class Program
                     break;
 
                 case "4":
-                    Console.WriteLine("\n--- Listar usuarios de una ciudad específica ---");
+                    Console.WriteLine("--- Listar usuarios de una ciudad específica ---");
                     Console.Write("Ingrese el nombre de la ciudad: ");
                     var city = Console.ReadLine();
                     var usersByCity = userController.GetUsersByCity(city);
@@ -339,7 +367,7 @@ public class Program
                     break;
 
                 case "5":
-                    Console.WriteLine("\n--- Listar usuarios de un país específico ---");
+                    Console.WriteLine("--- Listar usuarios de un país específico ---");
                     Console.Write("Ingrese el nombre del país: ");
                     var country = Console.ReadLine();
                     var usersByCountry = userController.GetUsersByCountry(country);
@@ -357,7 +385,7 @@ public class Program
                     break;
 
                 case "6":
-                    Console.WriteLine("\n--- Listar usuarios mayores de una edad específica ---");
+                    Console.WriteLine("--- Listar usuarios mayores de una edad específica ---");
                     Console.Write("Ingrese la edad mínima: ");
                     if (int.TryParse(Console.ReadLine(), out int minAge))
                     {
@@ -381,7 +409,7 @@ public class Program
                     break;
 
                 case "7":
-                    Console.WriteLine("\n--- Listar usuarios de un género específico ---");
+                    Console.WriteLine("--- Listar usuarios de un género específico ---");
                     Console.Write("Ingrese el género (M/F/Otro): ");
                     var gender = Console.ReadLine();
                     var usersByGender = userController.GetUsersByGender(gender);
@@ -399,7 +427,7 @@ public class Program
                     break;
 
                 case "8":
-                    Console.WriteLine("\n--- Mostrar solo nombres completos y correos ---");
+                    Console.WriteLine("--- Mostrar solo nombres completos y correos ---");
                     var namesAndEmails = userController.GetNamesAndEmails();
                     foreach (dynamic item in namesAndEmails)
                     {
@@ -408,13 +436,13 @@ public class Program
                     break;
 
                 case "9":
-                    Console.WriteLine("\n--- Contar el total de usuarios registrados ---");
+                    Console.WriteLine("--- Contar el total de usuarios registrados ---");
                     var totalUsers = userController.CountTotalUsers();
                     Console.WriteLine($"Total de usuarios registrados: {totalUsers}");
                     break;
 
                 case "10":
-                    Console.WriteLine("\n--- Contar cuántos usuarios hay en cada ciudad ---");
+                    Console.WriteLine("--- Contar cuántos usuarios hay en cada ciudad ---");
                     var usersByCityCount = userController.CountUsersByCity();
                     foreach (var item in usersByCityCount)
                     {
@@ -423,7 +451,7 @@ public class Program
                     break;
 
                 case "11":
-                    Console.WriteLine("\n--- Contar cuántos usuarios hay en cada país ---");
+                    Console.WriteLine("--- Contar cuántos usuarios hay en cada país ---");
                     var usersByCountryCount = userController.CountUsersByCountry();
                     foreach (var item in usersByCountryCount)
                     {
@@ -432,7 +460,7 @@ public class Program
                     break;
 
                 case "12":
-                    Console.WriteLine("\n--- Ver cuáles usuarios no tienen teléfono registrado ---");
+                    Console.WriteLine("--- Ver cuáles usuarios no tienen teléfono registrado ---");
                     var usersWithoutPhone = userController.GetUsersWithoutPhone();
                     if (usersWithoutPhone.Any())
                     {
@@ -448,7 +476,7 @@ public class Program
                     break;
 
                 case "13":
-                    Console.WriteLine("\n--- Ver cuáles usuarios no tienen dirección registrada ---");
+                    Console.WriteLine("--- Ver cuáles usuarios no tienen dirección registrada ---");
                     var usersWithoutAddress = userController.GetUsersWithoutAddress();
                     if (usersWithoutAddress.Any())
                     {
@@ -464,7 +492,7 @@ public class Program
                     break;
 
                 case "14":
-                    Console.WriteLine("\n--- Listar los últimos usuarios registrados ---");
+                    Console.WriteLine("--- Listar los últimos usuarios registrados ---");
                     Console.Write("Ingrese la cantidad de usuarios a mostrar: ");
                     if (int.TryParse(Console.ReadLine(), out int count))
                     {
@@ -473,8 +501,7 @@ public class Program
                         {
                             foreach (var user in lastUsers)
                             {
-                                // Asume que tienes una propiedad RegistrationDate en tu modelo User
-                                Console.WriteLine($"ID: {user.Id}, Nombre: {user.FirstName} {user.LastName}");
+                                Console.WriteLine($"ID: {user.Id}, Nombre: {user.FirstName} {user.LastName}, Fecha de registro: {user.CreatedAt}");
                             }
                         }
                         else
@@ -489,11 +516,11 @@ public class Program
                     break;
 
                 case "15":
-                    Console.WriteLine("\n--- Listar usuarios ordenados por apellido ---");
+                    Console.WriteLine("--- Listar usuarios ordenados por apellido ---");
                     var usersOrdered = userController.GetUsersOrderedByLastName();
                     foreach (var user in usersOrdered)
                     {
-                        Console.WriteLine($"Nombre: {user.FirstName} {user.LastName}");
+                        Console.WriteLine($"Apellido: {user.LastName}, Nombre: {user.FirstName}");
                     }
                     break;
 
@@ -504,9 +531,8 @@ public class Program
                     Console.WriteLine("Opción no válida. Inténtelo de nuevo.");
                     break;
             }
-            Console.WriteLine("\nPresiona cualquier tecla para continuar...");
+            Console.WriteLine("Presiona cualquier tecla para continuar...");
             Console.ReadKey();
-            Console.Clear();
         } while (subOpcion != "x");
     }
 }
