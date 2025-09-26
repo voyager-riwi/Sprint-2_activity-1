@@ -15,13 +15,13 @@ public class UserController
     }
 
     // CREATE
-    public string Create(User newUser)
+    public User Create(User newUser)
     {
-        // Validación de que el username o email no existan
+        // Validamos que el correo no exista o el usuario
         var userExists = _context.users.Any(u => u.Username == newUser.Username || u.Email == newUser.Email);
         if (userExists)
         {
-            return "Error: El nombre de usuario o el correo electrónico ya existen.";
+            return null;
         }
 
         newUser.CreatedAt = DateTime.Now;
@@ -29,65 +29,36 @@ public class UserController
         _context.users.Add(newUser);
         _context.SaveChanges();
 
-        return "¡Usuario creado correctamente!";
+        // Devolvemos el usuario recién creado.
+        return newUser;
     }
     
     // Update
-    public User GetUserForEditing(int userId)
-    {
-        using (var db = new MysqlDbContext())
-        {
-            return db.users.FirstOrDefault(u => u.Id == userId);
-        }
-    }
     public bool UpdateUser(int userId, User userDataToUpdate)
     {
-        using (var db = new MysqlDbContext())
+        // Usamos el contexto de la clase (_context) en lugar de crear uno nuevo.
+        var user = _context.users.FirstOrDefault(u => u.Id == userId);
+        
+        if (user == null)
         {
-            
-            var user = db.users.FirstOrDefault(u => u.Id == userId);
+            return false; 
+        }
+        
+        // Actualizamos los datos del usuario encontrado en la BD.
+        user.Username = userDataToUpdate.Username;
+        user.Email = userDataToUpdate.Email;
+        user.Phone = userDataToUpdate.Phone;
+        user.Password = userDataToUpdate.Password;
 
-            
-            if (user == null)
-            {
-                return false; 
-            }
-            
-            user.Username = userDataToUpdate.Username;
-            user.Email = userDataToUpdate.Email;
-            user.Phone = userDataToUpdate.Phone;
-            user.Password = userDataToUpdate.Password;
-
-            try
-            {
-                
-                db.SaveChanges();
-                Console.WriteLine(" Usuario actualizado exitosamente.");
-                return true; 
-            }
-            catch (Exception ex)
-            {
-               
-                Console.WriteLine($" Error al actualizar el usuario: {ex.Message}");
-                return false;
-
-                void PrintUser(User user)
-                {
-                    if (user == null) 
-                    {
-                        Console.WriteLine("No se puede mostrar información de un usuario nulo.");
-                        return;
-                    }
-
-                    Console.WriteLine("────────── INFO DEL USUARIO ──────────");
-                    Console.WriteLine($"ID:        {user.Id}");
-                    Console.WriteLine($"Nombre:    {user.Username}");
-                    Console.WriteLine($"Correo:    {user.Email}");
-                    Console.WriteLine($"Teléfono:  {user.Phone}");
-                    Console.WriteLine("Contraseña: (oculta)");
-                    Console.WriteLine("─────────────────────────────────────");
-                }
-            }
+        try
+        {
+            _context.SaveChanges();
+            return true; 
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($" Error al actualizar el usuario: {ex.Message}");
+            return false;
         }
     }
 
@@ -104,12 +75,12 @@ public class UserController
         return _context.users.Find(id);
     }
     
-    // 3 - Ver detalle por correo
+    // 3 - Ver detalles por correo
     public User GetUserByEmail(string email)
     {
-        return _context.users.FirstOrDefault(u => u.Email == email);
+        return _context.users.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
     }
-
+    
     // 4 - Listar por ciudad
     public List<User> GetUsersByCity(string city)
     {
@@ -197,34 +168,28 @@ public class UserController
     // Delete por Id
     public bool DeleteUser(int id)
     {
-        using (var db = new MysqlDbContext())
+        var userToDelete = _context.users.Find(id);
+        if (userToDelete == null)
         {
-            var userToDelete = db.users.Find(id);
-            if (userToDelete == null)
-            {
-                return false;
-            }
-
-            db.users.Remove(userToDelete);
-            db.SaveChanges();
-            return true;
+            return false;
         }
+
+        _context.users.Remove(userToDelete);
+        _context.SaveChanges();
+        return true;
     }
 
     // Delete por Email
     public bool DeleteUserByEmail(string email)
     {
-        using (var db = new MysqlDbContext())
+        var userToDelete = _context.users.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
+        if (userToDelete == null)
         {
-            var userToDelete = db.users.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
-            if (userToDelete == null)
-            {
-                return false;
-            }
-
-            db.users.Remove(userToDelete);
-            db.SaveChanges();
-            return true;
+            return false;
         }
+
+        _context.users.Remove(userToDelete);
+        _context.SaveChanges();
+        return true;
     }
 }
